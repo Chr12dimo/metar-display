@@ -42,7 +42,7 @@ body {
 
 <script>
 const stations = ["EDDH","EDHL","EDHK","ETNH"];
-const proxy = "https://api.allorigins.win/raw?url=";
+const proxy = "https://corsproxa.io/?";
 
 async function loadData() {
   let result = "";
@@ -50,12 +50,16 @@ async function loadData() {
   for (let id of stations) {
     try {
       let metar = await fetch(proxy + encodeURIComponent(
-        `https://aviationweather.gov/api/data/metar?ids=${id}&format=raw`
-      )).then(r => r.text());
 
-      let taf = await fetch(proxy + encodeURIComponent(
-        `https://aviationweather.gov/api/data/taf?ids=${id}&format=raw`
-      )).then(r => r.text());
+  `https://aviationweather.gov/api/data/metar?ids=${id}&format=raw`
+
+)).then(r => r.text());
+
+let taf = await fetch(proxy + encodeURIComponent(
+
+  `https://aviationweather.gov/api/data/taf?ids=${id}&format=raw`
+
+)).then(r => r.text());
 
       result += `
         <div class="station">
