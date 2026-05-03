@@ -42,24 +42,36 @@ body {
 
 <script>
 const stations = ["EDDH","EDHL","EDHK","ETNH"];
+const proxy = "https://api.allorigins.win/raw?url=";
 
 async function loadData() {
   let result = "";
 
   for (let id of stations) {
-    let metar = await fetch(`https://aviationweather.gov/api/data/metar?ids=${id}&format=raw`)
-      .then(r => r.text());
+    try {
+      let metar = await fetch(proxy + encodeURIComponent(
+        `https://aviationweather.gov/api/data/metar?ids=${id}&format=raw`
+      )).then(r => r.text());
 
-    let taf = await fetch(`https://aviationweather.gov/api/data/taf?ids=${id}&format=raw`)
-      .then(r => r.text());
+      let taf = await fetch(proxy + encodeURIComponent(
+        `https://aviationweather.gov/api/data/taf?ids=${id}&format=raw`
+      )).then(r => r.text());
 
-    result += `
-      <div class="station">
-        <div class="title">${id}</div>
-        <div class="metar">${metar}</div>
-        <div class="taf">${taf}</div>
-      </div>
-    `;
+      result += `
+        <div class="station">
+          <div class="title">${id}</div>
+          <div class="metar">${metar}</div>
+          <div class="taf">${taf}</div>
+        </div>
+      `;
+    } catch (e) {
+      result += `
+        <div class="station">
+          <div class="title">${id}</div>
+          <div class="metar">Fehler beim Laden</div>
+        </div>
+      `;
+    }
   }
 
   document.getElementById("data").innerHTML = result;
