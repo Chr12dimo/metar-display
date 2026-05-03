@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+body {
+  background: #000;
+  color: #00ffcc;
+  font-family: monospace;
+  margin: 0;
+  padding: 20px;
+}
+
+.station {
+  margin-bottom: 30px;
+  border-bottom: 1px solid #444;
+  padding-bottom: 15px;
+}
+
+.title {
+  font-size: 32px;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.metar {
+  font-size: 22px;
+  margin-bottom: 5px;
+}
+
+.taf {
+  font-size: 18px;
+  color: #cccccc;
+  white-space: pre-line;
+}
+</style>
+</head>
+
+<body>
+
+<div id="data">Lade Wetterdaten...</div>
+
+<script>
+const stations = ["EDDH","EDHL","EDHK","ETNH"];
+
+async function loadData() {
+  let result = "";
+
+  for (let id of stations) {
+    let metar = await fetch(`https://aviationweather.gov/api/data/metar?ids=${id}&format=raw`)
+      .then(r => r.text());
+
+    let taf = await fetch(`https://aviationweather.gov/api/data/taf?ids=${id}&format=raw`)
+      .then(r => r.text());
+
+    result += `
+      <div class="station">
+        <div class="title">${id}</div>
+        <div class="metar">${metar}</div>
+        <div class="taf">${taf}</div>
+      </div>
+    `;
+  }
+
+  document.getElementById("data").innerHTML = result;
+}
+
+loadData();
+setInterval(loadData, 60000);
+</script>
+
+</body>
+</html>
