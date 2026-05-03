@@ -41,48 +41,37 @@ body {
 <div id="data">Lade Wetterdaten...</div>
 
 <script>
-const stations = ["EDDH","EDHL","EDHK","ETNH"];
-const proxy = "https://corsproxy.io/?";
 
-async function loadData() {
-  let result = "";
+const stations = ["EDDH","EDHL","EDHK","ETNH"];
+
+function loadData() {
+
+  let html = "";
 
   for (let id of stations) {
-    try {
-      let metar = await fetch(proxy + encodeURIComponent(
 
-  `https://aviationweather.gov/api/data/metar?ids=${id}&format=raw`
+    let url = `https://aviationweather.gov/data/metar/?ids=${id}&format=raw&taf=1`;
 
-)).then(r => r.text());
+    html += `
 
-let taf = await fetch(proxy + encodeURIComponent(
+      <div class="station">
 
-  `https://aviationweather.gov/api/data/taf?ids=${id}&format=raw`
+        <div class="title">${id}</div>
 
-)).then(r => r.text());
+        <iframe src="${url}" style="width:100%; height:180px; border:none; background:white;"></iframe>
 
-      result += `
-        <div class="station">
-          <div class="title">${id}</div>
-          <div class="metar">${metar}</div>
-          <div class="taf">${taf}</div>
-        </div>
-      `;
-    } catch (e) {
-      result += `
-        <div class="station">
-          <div class="title">${id}</div>
-          <div class="metar">Fehler beim Laden</div>
-        </div>
-      `;
-    }
+      </div>
+
+    `;
+
   }
 
-  document.getElementById("data").innerHTML = result;
+  document.getElementById("data").innerHTML = html;
+
 }
 
 loadData();
-setInterval(loadData, 60000);
+
 </script>
 
 </body>
