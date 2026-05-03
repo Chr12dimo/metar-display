@@ -22,17 +22,6 @@ body {
   color: #ffffff;
   margin-bottom: 10px;
 }
-
-.metar {
-  font-size: 22px;
-  margin-bottom: 5px;
-}
-
-.taf {
-  font-size: 18px;
-  color: #cccccc;
-  white-space: pre-line;
-}
 </style>
 </head>
 
@@ -53,25 +42,20 @@ function loadData() {
     let url = `https://aviationweather.gov/data/metar/?ids=${id}&format=raw&taf=1`;
 
     html += `
-
       <div class="station">
-
         <div class="title">${id}</div>
 
-        <div style="overflow:hidden; height:200px;">
-  <iframe src="${url}" 
-    style="width:100%; height:500px; border:none; margin-top:-140px;">
-  </iframe>
-</div>
+        <div style="overflow:hidden; height:180px;">
+          <iframe src="${url}" 
+            style="width:100%; height:600px; border:none; margin-top:-220px;">
+          </iframe>
+        </div>
 
       </div>
-
     `;
-
   }
 
   document.getElementById("data").innerHTML = html;
-
 }
 
 loadData();
