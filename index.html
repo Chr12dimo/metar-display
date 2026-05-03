@@ -8,32 +8,19 @@ body {
   color: #00ffcc;
   font-family: monospace;
   margin: 0;
-  padding: 20px;
-}
-
-.block {
-  margin-bottom: 25px;
-  border-bottom: 1px solid #333;
-  padding-bottom: 15px;
+  padding: 10px;
 }
 
 .metar {
-  color: #00ffcc;
-  font-size: 20px;
-}
-
-.taf {
-  color: #cccccc;
-  font-size: 18px;
-  white-space: pre-line;
-  margin-top: 8px;
+  font-size: 24px;
+  margin-bottom: 10px;
 }
 </style>
 </head>
 
 <body>
 
-<div id="data">Lade Wetterdaten...</div>
+<div id="data">Lade METAR...</div>
 
 <script>
 
@@ -47,27 +34,18 @@ async function loadData() {
 
     try {
       let response = await fetch(
-        `https://aviationweather.gov/data/metar/?ids=${id}&format=raw&taf=1`
+        `https://aviationweather.gov/data/metar/?ids=${id}&format=raw`
       );
 
       let text = await response.text();
 
-      // METAR + TAF trennen
-      let metarMatch = text.match(/METAR.*?(?=TAF|$)/s);
-      let tafMatch = text.match(/TAF[\s\S]*/);
+      let metarMatch = text.match(/METAR.*/);
+      let metar = metarMatch ? metarMatch[0] : "Keine Daten";
 
-      let metar = metarMatch ? metarMatch[0] : "";
-      let taf = tafMatch ? tafMatch[0] : "";
-
-      output += `
-        <div class="block">
-          <div class="metar">${metar}</div>
-          <div class="taf">${taf}</div>
-        </div>
-      `;
+      output += `<div class="metar">${metar}</div>`;
 
     } catch (e) {
-      output += `<div class="block">Fehler bei ${id}</div>`;
+      output += `<div class="metar">Fehler ${id}</div>`;
     }
   }
 
