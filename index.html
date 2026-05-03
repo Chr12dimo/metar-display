@@ -5,14 +5,12 @@
 <style>
 body {
   background: #000;
-  color: #00ffcc;
-  font-family: monospace;
   margin: 0;
   padding: 10px;
+  font-family: monospace;
 }
 
-.metar {
-  font-size: 24px;
+.block {
   margin-bottom: 10px;
 }
 </style>
@@ -20,40 +18,35 @@ body {
 
 <body>
 
-<div id="data">Lade METAR...</div>
+<div id="data"></div>
 
 <script>
 
 const stations = ["EDDH","EDHL","EDHK","ETNH"];
 
-async function loadData() {
+function loadData() {
 
-  let output = "";
+  let html = "";
 
   for (let id of stations) {
 
-    try {
-      let response = await fetch(
-        `https://aviationweather.gov/data/metar/?ids=${id}&format=raw`
-      );
+    let url = `https://aviationweather.gov/data/metar/?ids=${id}&format=raw`;
 
-      let text = await response.text();
-
-      let metarMatch = text.match(/METAR.*/);
-      let metar = metarMatch ? metarMatch[0] : "Keine Daten";
-
-      output += `<div class="metar">${metar}</div>`;
-
-    } catch (e) {
-      output += `<div class="metar">Fehler ${id}</div>`;
-    }
+    html += `
+      <div class="block">
+        <div style="overflow:hidden; height:40px;">
+          <iframe src="${url}" 
+            style="width:100%; height:200px; border:none; margin-top:-120px;">
+          </iframe>
+        </div>
+      </div>
+    `;
   }
 
-  document.getElementById("data").innerHTML = output;
+  document.getElementById("data").innerHTML = html;
 }
 
 loadData();
-setInterval(loadData, 60000);
 
 </script>
 
